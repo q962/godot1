@@ -5,11 +5,12 @@ workflows:
         instance_type: mac_mini_m1
         environment:
             ios_signing:
-                distribution_type: development
+                distribution_type: ad_hoc
                 bundle_identifier: io.github.q962.Dodge-the-Creeps
             groups:
                 - godot
             vars:
+                BUNDLE_ID: io.github.q962.Dodge-the-Creeps
                 GODOT_VERSION: 4.2.1
                 GODOT_EXEC_URL: https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_macos.universal.zip
                 GODOT_TEMPLATES_URL: https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_export_templates.tpz
@@ -17,6 +18,7 @@ workflows:
                 GODOT_EXEC: Godot.app/Contents/MacOS/Godot
                 EXPORT_TYPE: iOS
                 ARTIFACT: app.ipa
+            xcode: 14.2
         scripts:
             - name: Download Godot engine
               script: |
@@ -29,9 +31,9 @@ workflows:
                   mkdir -p "${GODOT_TEMPLATES_DIR}" && mv templates "${GODOT_TEMPLATES_DIR}/${GODOT_VERSION}.stable"
             - name: Prepare build directory
               script: mkdir build/
-            - name: Decode export presets
-              script: echo ${GODOT_EXPORT_PRESETS} | base64 --decode > ./export_presets.cfg
             - name: Export project
               script: ${GODOT_EXEC} --path . --headless --export-debug "${EXPORT_TYPE}" build/${ARTIFACT}
+            - name: Decode export presets
+              script: echo ${GODOT_EXPORT_PRESETS} | base64 --decode > ./export_presets.cfg
         artifacts:
             - build/*.zip
