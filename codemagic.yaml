@@ -6,7 +6,7 @@ workflows:
         environment:
             ios_signing:
                 distribution_type: development
-            bundle_identifier: io.github.q962.Dodge-the-Creeps
+                bundle_identifier: io.github.q962.Dodge-the-Creeps
             groups:
                 - godot
             vars:
