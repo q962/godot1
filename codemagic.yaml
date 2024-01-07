@@ -4,13 +4,9 @@ workflows:
         max_build_duration: 120
         instance_type: mac_mini_m1
         environment:
-            ios_signing:
-                distribution_type: development
-                bundle_identifier: io.github.q962.Dodge-the-Creeps
             groups:
                 - godot
             vars:
-                BUNDLE_ID: io.github.q962.Dodge-the-Creeps
                 GODOT_VERSION: 4.2.1
                 GODOT_EXEC_URL: https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_macos.universal.zip
                 GODOT_TEMPLATES_URL: https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_export_templates.tpz
@@ -37,3 +33,4 @@ workflows:
               script: echo ${GODOT_EXPORT_PRESETS} | base64 --decode > ./export_presets.cfg
         artifacts:
             - build/*.zip
+            - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
