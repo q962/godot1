@@ -7,15 +7,17 @@ workflows:
             groups:
                 - godot
             vars:
-                GODOT_VERSION: 4.2.2
-                GODOT_EXEC_URL: https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_macos.universal.zip
-                GODOT_TEMPLATES_URL: https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_export_templates.tpz
                 GODOT_TEMPLATES_DIR: "/Users/builder/Library/Application Support/Godot/export_templates"
                 GODOT_EXEC: Godot.app/Contents/MacOS/Godot
                 EXPORT_TYPE: iOS
                 ARTIFACT: app
             xcode: latest
         scripts:
+            - name: set env
+              script: |
+                echo "GODOT_VERSION=4.2.2" >> $CM_ENV;
+                echo "GODOT_EXEC_URL=https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_macos.universal.zip" >> $CM_ENV;
+                echo "GODOT_TEMPLATES_URL=https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_export_templates.tpz" >> $CM_ENV;
             - name: Download Godot engine
               script: curl -o ./godot.zip ${GODOT_EXEC_URL} && unzip ./godot.zip
             - name: Download Godot templates
