@@ -20,9 +20,9 @@ workflows:
                 echo "GODOT_EXEC_URL=https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_macos.universal.zip" >> $CM_ENV;
                 echo "GODOT_TEMPLATES_URL=https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_export_templates.tpz" >> $CM_ENV;
             - name: Download Godot engine
-              script: curl -o ./godot.zip ${GODOT_EXEC_URL} && unzip ./godot.zip
+              script: curl -L -o ./godot.zip ${GODOT_EXEC_URL} && unzip ./godot.zip
             - name: Download Godot templates
-              script: curl -o ./godot-templates.zip ${GODOT_TEMPLATES_URL} && unzip ./godot-templates.zip
+              script: curl -L -o ./godot-templates.zip ${GODOT_TEMPLATES_URL} && unzip ./godot-templates.zip
             - name: Setup templates
               script: mkdir -p "${GODOT_TEMPLATES_DIR}" && mv templates "${GODOT_TEMPLATES_DIR}/${GODOT_VERSION}.stable"
             - name: Prepare build directory
