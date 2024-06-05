@@ -7,30 +7,42 @@ workflows:
             groups:
                 - godot
             vars:
-                GODOT_VERSION: 4.2.1
+                GODOT_VERSION: 4.2.2
                 GODOT_EXEC_URL: https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_macos.universal.zip
                 GODOT_TEMPLATES_URL: https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_export_templates.tpz
                 GODOT_TEMPLATES_DIR: "/Users/builder/Library/Application Support/Godot/export_templates"
                 GODOT_EXEC: Godot.app/Contents/MacOS/Godot
                 EXPORT_TYPE: iOS
-                ARTIFACT: app.ipa
+                ARTIFACT: app
             xcode: 14.2
         scripts:
             - name: Download Godot engine
-              script: |
-                  curl -L -o ./godot.zip ${GODOT_EXEC_URL} && unzip ./godot.zip
+              script: curl -o ./godot.zip ${GODOT_EXEC_URL} && unzip ./godot.zip
             - name: Download Godot templates
-              script: |
-                  curl -L -o ./godot-templates.zip ${GODOT_TEMPLATES_URL} && unzip ./godot-templates.zip
+              script: curl -o ./godot-templates.zip ${GODOT_TEMPLATES_URL} && unzip ./godot-templates.zip
             - name: Setup templates
-              script: |
-                  mkdir -p "${GODOT_TEMPLATES_DIR}" && mv templates "${GODOT_TEMPLATES_DIR}/${GODOT_VERSION}.stable"
+              script: mkdir -p "${GODOT_TEMPLATES_DIR}" && mv templates "${GODOT_TEMPLATES_DIR}/${GODOT_VERSION}.stable"
             - name: Prepare build directory
               script: mkdir build/
+              #- name: Decode export presets
+              #  script: echo ${GODOT_EXPORT_PRESETS} | base64 --decode > ./export_presets.cfg
             - name: Export project
-              script: ${GODOT_EXEC} --path . --headless --export-debug "${EXPORT_TYPE}" build/${ARTIFACT}
-            - name: Decode export presets
-              script: echo ${GODOT_EXPORT_PRESETS} | base64 --decode > ./export_presets.cfg
+              script: ${GODOT_EXEC} --path . --headless --export-release "${EXPORT_TYPE}" build/${ARTIFACT}
+            - name: build
+              script: |
+                cd build
+
+                xcodebuild archive \
+                -project "app.xcworkspace" \
+                -scheme "app" \
+                -archivePath  archive_output.xcarchive \
+                -configuration release \
+                CODE_SIGN_IDENTITY="" \
+                CODE_SIGNING_REQUIRED=NO \
+                CODE_SIGNING_ALLOWED=NO \
+                || exit -1
+
+              - mv archive_output.xcarchive/Products/{Applications,Payload}
+              - 7z a -tzip app.ipa.7z ./archive_output.xcarchive/Products/Payload
         artifacts:
-            - build/*.zip
-            - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
+            - build/app.ipa.7z
