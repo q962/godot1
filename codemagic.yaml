@@ -42,7 +42,7 @@ workflows:
                 CODE_SIGNING_ALLOWED=NO \
                 || exit -1
 
-              - mv archive_output.xcarchive/Products/{Applications,Payload}
-              - 7z a -tzip app.ipa.7z ./archive_output.xcarchive/Products/Payload
+                mv archive_output.xcarchive/Products/{Applications,Payload}
+                7z a -tzip app.ipa.7z ./archive_output.xcarchive/Products/Payload
         artifacts:
             - build/app.ipa.7z
