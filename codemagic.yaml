@@ -15,6 +15,7 @@ workflows:
         scripts:
             - name: set env
               script: |
+                GODOT_VERSION=4.2.2;
                 echo "GODOT_VERSION=4.2.2" >> $CM_ENV;
                 echo "GODOT_EXEC_URL=https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_macos.universal.zip" >> $CM_ENV;
                 echo "GODOT_TEMPLATES_URL=https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_export_templates.tpz" >> $CM_ENV;
