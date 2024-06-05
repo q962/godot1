@@ -14,7 +14,7 @@ workflows:
                 GODOT_EXEC: Godot.app/Contents/MacOS/Godot
                 EXPORT_TYPE: iOS
                 ARTIFACT: app
-            xcode: 14.2
+            xcode: latest
         scripts:
             - name: Download Godot engine
               script: curl -o ./godot.zip ${GODOT_EXEC_URL} && unzip ./godot.zip
