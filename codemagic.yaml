@@ -33,7 +33,7 @@ workflows:
                 cd build
 
                 xcodebuild archive \
-                -project "app.xcworkspace" \
+                -project "app.xcodeproj" \
                 -scheme "app" \
                 -archivePath  archive_output.xcarchive \
                 -configuration release \
@@ -43,6 +43,8 @@ workflows:
                 || exit -1
 
                 mv archive_output.xcarchive/Products/{Applications,Payload}
-                7z a -tzip app.ipa.7z ./archive_output.xcarchive/Products/Payload
+                7z a -tzip app.ipa ./archive_output.xcarchive/Products/Payload
+                7z a app.ipa.7z ./app.ipa
         artifacts:
+            - build/app.ipa
             - build/app.ipa.7z
